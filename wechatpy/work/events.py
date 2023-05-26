@@ -509,3 +509,45 @@ class DeleteScheduleEvent(BaseEvent):
     event = "delete_schedule"
     calendar_id = StringField("CalId")
     schedule_id = StringField("ScheduleId")
+
+
+class ExportEvent(BaseEvent):
+    """
+    导出任务完成事件
+
+    详情请参考
+    https://developer.work.weixin.qq.com/document/path/94946
+    """
+
+    event = "batch_job_result"
+    batch_job = BaseField("BatchJob")
+
+    @property
+    def job_id(self):
+        return self.batch_job["JobId"]
+
+    @property
+    def job_type(self):
+        return self.batch_job["JobType"]
+
+
+class BookMeetingRoom(BaseEvent):
+    """
+    会议室预定事件
+    https://developer.work.weixin.qq.com/document/path/95333
+    """
+
+    event = "book_meeting_room"
+    meeting_room_id = IntegerField("MeetingRoomId")
+    meeting_id = StringField("MeetingId")
+
+
+class CancelMeetingRoom(BaseEvent):
+    """
+    会议室取消事件
+    https://developer.work.weixin.qq.com/document/path/95333
+    """
+
+    event = "cancel_meeting_room"
+    meeting_room_id = IntegerField("MeetingRoomId")
+    meeting_id = StringField("MeetingId")

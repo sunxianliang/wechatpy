@@ -286,3 +286,121 @@ class ParseMessageTestCase(unittest.TestCase):
         self.assertIsInstance(msg, events.DeleteScheduleEvent)
         self.assertEqual("wcjgewCwAAqeJcPI1d8Pwbjt7nttzAAA", msg.calendar_id)
         self.assertEqual("17c7d2bd9f20d652840f72f59e796AAA", msg.schedule_id)
+
+    def test_export(self):
+        xml = """
+        <xml>
+            <ToUserName><![CDATA[wx28dbb14e3720FAKE]]></ToUserName>
+            <FromUserName><![CDATA[FromUser]]></FromUserName>
+            <CreateTime>1425284517</CreateTime>
+            <MsgType><![CDATA[event]]></MsgType>
+            <Event><![CDATA[batch_job_result]]></Event>
+            <BatchJob>
+                <JobId><![CDATA[jobid_S0MrnndvRG5fadSlLwiBqiDDbM143UqTmKP3152FZk4]]></JobId>
+                <JobType><![CDATA[export_user]]></JobType>
+                <ErrCode>0</ErrCode>
+                <ErrMsg><![CDATA[ok]]></ErrMsg>
+            </BatchJob>
+        </xml>
+        """
+        msg = parse_message(xml)
+
+        self.assertIsInstance(msg, events.ExportEvent)
+        self.assertEqual("jobid_S0MrnndvRG5fadSlLwiBqiDDbM143UqTmKP3152FZk4", msg.job_id)
+        self.assertEqual("export_user", msg.job_type)
+
+        xml = """
+        <xml>
+            <ToUserName><![CDATA[wx28dbb14e3720FAKE]]></ToUserName>
+            <FromUserName><![CDATA[FromUser]]></FromUserName>
+            <CreateTime>1425284517</CreateTime>
+            <MsgType><![CDATA[event]]></MsgType>
+            <Event><![CDATA[batch_job_result]]></Event>
+            <BatchJob>
+                <JobId><![CDATA[jobid_S0MrnndvRG5fadSlLwiBqiDDbM143UqTmKP3152FZk4]]></JobId>
+                <JobType><![CDATA[export_simple_user]]></JobType>
+                <ErrCode>0</ErrCode>
+                <ErrMsg><![CDATA[ok]]></ErrMsg>
+            </BatchJob>
+        </xml>
+        """
+        msg = parse_message(xml)
+
+        self.assertIsInstance(msg, events.ExportEvent)
+        self.assertEqual("jobid_S0MrnndvRG5fadSlLwiBqiDDbM143UqTmKP3152FZk4", msg.job_id)
+        self.assertEqual("export_simple_user", msg.job_type)
+
+        xml = """
+        <xml>
+            <ToUserName><![CDATA[wx28dbb14e3720FAKE]]></ToUserName>
+            <FromUserName><![CDATA[FromUser]]></FromUserName>
+            <CreateTime>1425284517</CreateTime>
+            <MsgType><![CDATA[event]]></MsgType>
+            <Event><![CDATA[batch_job_result]]></Event>
+            <BatchJob>
+                <JobId><![CDATA[jobid_S0MrnndvRG5fadSlLwiBqiDDbM143UqTmKP3152FZk4]]></JobId>
+                <JobType><![CDATA[export_department]]></JobType>
+                <ErrCode>0</ErrCode>
+                <ErrMsg><![CDATA[ok]]></ErrMsg>
+            </BatchJob>
+        </xml>
+        """
+        msg = parse_message(xml)
+
+        self.assertIsInstance(msg, events.ExportEvent)
+        self.assertEqual("jobid_S0MrnndvRG5fadSlLwiBqiDDbM143UqTmKP3152FZk4", msg.job_id)
+        self.assertEqual("export_department", msg.job_type)
+
+        xml = """
+        <xml>
+            <ToUserName><![CDATA[wx28dbb14e3720FAKE]]></ToUserName>
+            <FromUserName><![CDATA[FromUser]]></FromUserName>
+            <CreateTime>1425284517</CreateTime>
+            <MsgType><![CDATA[event]]></MsgType>
+            <Event><![CDATA[batch_job_result]]></Event>
+            <BatchJob>
+                <JobId><![CDATA[jobid_S0MrnndvRG5fadSlLwiBqiDDbM143UqTmKP3152FZk4]]></JobId>
+                <JobType><![CDATA[export_taguser]]></JobType>
+                <ErrCode>0</ErrCode>
+                <ErrMsg><![CDATA[ok]]></ErrMsg>
+            </BatchJob>
+        </xml>
+        """
+        msg = parse_message(xml)
+
+        self.assertIsInstance(msg, events.ExportEvent)
+        self.assertEqual("jobid_S0MrnndvRG5fadSlLwiBqiDDbM143UqTmKP3152FZk4", msg.job_id)
+        self.assertEqual("export_taguser", msg.job_type)
+
+    def test_meeting(self):
+        xml = """
+        <xml>
+            <ToUserName><![CDATA[toUser]]></ToUserName>
+            <FromUserName><![CDATA[fromUser]]></FromUserName>
+            <CreateTime>1348831860</CreateTime>
+            <MsgType><![CDATA[event]]></MsgType>
+            <Event><![CDATA[book_meeting_room]]></Event>
+            <MeetingRoomId>1</MeetingRoomId>
+            <MeetingId><![CDATA[mtebsada6e027c123cbafAAA]]></MeetingId>
+        </xml>
+        """
+        msg = parse_message(xml)
+        self.assertIsInstance(msg, events.BookMeetingRoom)
+        self.assertEqual(1, msg.meeting_room_id)
+        self.assertEqual("mtebsada6e027c123cbafAAA", msg.meeting_id)
+
+        xml = """
+        <xml>
+            <ToUserName><![CDATA[toUser]]></ToUserName>
+            <FromUserName><![CDATA[fromUser]]></FromUserName>
+            <CreateTime>1348831860</CreateTime>
+            <MsgType><![CDATA[event]]></MsgType>
+            <Event><![CDATA[cancel_meeting_room]]></Event>
+            <MeetingId><![CDATA[mtebsada6e027c123cbafAAA]]></MeetingId>
+            <MeetingRoomId>1</MeetingRoomId>
+        </xml>
+        """
+        msg = parse_message(xml)
+        self.assertIsInstance(msg, events.CancelMeetingRoom)
+        self.assertEqual(1, msg.meeting_room_id)
+        self.assertEqual("mtebsada6e027c123cbafAAA", msg.meeting_id)
